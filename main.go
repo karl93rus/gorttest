@@ -2,40 +2,13 @@ package main
 
 import (
   "fmt"
-  "database/sql"
-  _ "github.com/lib/pq"
+  "net/http"
 )
 
-
 func main() {
-  connStr := "user=karl dbname=karl host=localhost sslmode=disable"
+  fmt.Println("Start")
 
-  getCountries(connStr)
-  getCodes(connStr)
-  db, err := sql.Open("postgres", connStr)
-  if err != nil {
-    fmt.Println(err)
-  }
-  defer db.Close()
+  http.HandleFunc("/code/", getCodeByName)
 
-  var (
-    ct string
-    cct string
-    countries string
-    number string
-  )
-
-  rows, err := db.Query("SELECT ct, country FROM countries")
-  for rows.Next() {
-    rows.Scan(&ct, &countries)
-    fmt.Println(ct, countries)
-  }
-
-  fmt.Println("\n\n\n\n")
-
-  rowss, err := db.Query("SELECT ct, number FROM numbers")
-  for rowss.Next() {
-    rowss.Scan(&cct, &number)
-    fmt.Println(cct, number)
-  }
+  http.ListenAndServe(":5555", nil)
 }
