@@ -16,6 +16,8 @@ func getCodes(connStr string) {
   }
   defer db.Close()
 
+  var r interface{}
+
   resp, err := http.Get("http://country.io/phone.json")
   if err != nil {
     fmt.Println(err)
@@ -24,11 +26,16 @@ func getCodes(connStr string) {
 
   body, err := ioutil.ReadAll(resp.Body)
 
-  var r interface{}
-
   json.Unmarshal(body, &r)
   data := r.(map[string]interface{})
+  queryStr := "INSERT INTO numbers (ct, number) VALUES ($1, $2)"
   for k, v := range data {
-    db.Query("INSERT INTO numbers (ct, number) VALUES ($1, $2) ON CONFLICT DO NOTHING/UPDATE", k, v)
+    _, err := db.Exec(queryStr, k, v)
+    if err != nil {
+      fmt.Println(err)
+    }
+    fmt.Println(k, v)
   }
+
+  fmt.Println("Codes updated\n")
 }

@@ -9,6 +9,7 @@ func main() {
   fmt.Println("Start")
 
   http.HandleFunc("/code/", getCodeByName)
+  http.HandleFunc("/reload/", updateDb)
 
   http.ListenAndServe(":5555", nil)
 }
