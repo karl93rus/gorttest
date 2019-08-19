@@ -28,7 +28,7 @@ func getCodes(connStr string) {
 
   json.Unmarshal(body, &r)
   data := r.(map[string]interface{})
-  queryStr := "INSERT INTO numbers (ct, number) VALUES ($1, $2)"
+  queryStr := "INSERT INTO numbers (ct, number) VALUES ($1, $2) ON CONFLICT (ct) DO NOTHING"
   for k, v := range data {
     _, err := db.Exec(queryStr, k, v)
     if err != nil {

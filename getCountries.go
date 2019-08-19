@@ -28,7 +28,7 @@ func getCountries(connStr string) {
 
   json.Unmarshal(body, &i)
   data := i.(map[string]interface{})
-  queryStr := "INSERT INTO countries (ct, country) VALUES ($1, $2)"
+  queryStr := "INSERT INTO countries (ct, country) VALUES ($1, $2) ON CONFLICT (ct) DO NOTHING"
   for k, v := range data {
     _, err := db.Exec(queryStr, k, v)
     if err != nil {

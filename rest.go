@@ -5,13 +5,17 @@ import (
   "net/http"
   "database/sql"
   "strings"
+  "time"
 )
 
 func getCodeByName(w http.ResponseWriter, req *http.Request) {
   country := req.URL.Path[len("/code/"):]
   country = strings.ToLower(country)
-
-  fmt.Println(country)
+  if req.Method != "GET" {
+    fmt.Fprintf(w, "Invalid request method. Terminating...")
+    return
+  }
+  fmt.Println(req.Method, time.Now())
 
   connStr := "user=karl dbname=karl host=localhost sslmode=disable"
   db, err := sql.Open("postgres", connStr)
@@ -38,8 +42,9 @@ func getCodeByName(w http.ResponseWriter, req *http.Request) {
   }
 
   if r.c == "" {
-    w.WriteHeader(400)
+    w.WriteHeader(404)
     fmt.Fprintf(w, "Country not found...")
+    fmt.Println("Country not found...")
     return
   }
 
