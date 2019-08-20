@@ -20,7 +20,11 @@ func updateDb(w http.ResponseWriter, req *http.Request) {
 
   fmt.Fprintf(w, "Updating...........\n")
 
-  getCountries(connStr)
+  gerr := getCountries(connStr)
+  if gerr != nil {
+    fmt.Fprintf(w, "Error occured while connecting with database...")
+    return
+  }
   getCodes(connStr)
 
   fmt.Fprintf(w, "Updated")

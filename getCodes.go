@@ -9,7 +9,7 @@ import (
   _ "github.com/lib/pq"
 )
 
-func getCodes(connStr string) {
+func getCodes(connStr string) error {
   db, err := sql.Open("postgres", connStr)
   if err != nil {
     fmt.Println(err)
@@ -33,9 +33,12 @@ func getCodes(connStr string) {
     _, err := db.Exec(queryStr, k, v)
     if err != nil {
       fmt.Println(err)
+      return err
     }
     fmt.Println(k, v)
   }
 
   fmt.Println("Codes updated\n")
+
+  return nil
 }

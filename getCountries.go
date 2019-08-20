@@ -9,10 +9,11 @@ import (
   _ "github.com/lib/pq"
 )
 
-func getCountries(connStr string) {
+func getCountries(connStr string) error {
   db, err := sql.Open("postgres", connStr)
   if err != nil {
     fmt.Println(err)
+    return err
   }
   defer db.Close()
 
@@ -33,9 +34,12 @@ func getCountries(connStr string) {
     _, err := db.Exec(queryStr, k, v)
     if err != nil {
       fmt.Println(err)
+      return err
     }
     fmt.Println(k, v)
   }
 
   fmt.Println("Countries updated\n")
+
+  return nil
 }

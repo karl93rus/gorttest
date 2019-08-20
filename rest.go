@@ -21,7 +21,9 @@ func getCodeByName(w http.ResponseWriter, req *http.Request) {
   connStr := "user=karl dbname=karl host=localhost sslmode=disable"
   db, err := sql.Open("postgres", connStr)
   if err != nil {
+    fmt.Fprintf(w, "Error occured while connecting with database...")
     fmt.Println(err)
+    return
   }
   defer db.Close()
 
