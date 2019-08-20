@@ -1,0 +1,2 @@
+# * 2 * * * wget http://localhost:5555/reload
+* * * * * echo "Cron works"
