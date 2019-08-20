@@ -10,3 +10,18 @@
 5. Реализовать unit test к сервису GET /code/${COUNTRYNAME}
 6. Реализовать логирование ошибок приложения и логирование запросов к реализованным REST сервисам.
 7. Написать Dockerfile сборки и деплоя приложения 
+
+-------------------------------------------------
+
+Implement microservice as required:
+
+1. Service must load info about countries and phone codes to the relational DB
+    Data sourse: 
+        Couuntries: http://country.io/names.json 
+        Phone codes: http://country.io/phone.json 
+2. Implement RESTful service with the /reload endpoint (POST), wich will refresh info about countries and codes in the DB
+3. Implement automatic DB refresh at 2:00AM MSK.
+4. Implement RESTful service with the /code/${COUNTRYNAME} endpoint (GET). Service returns phone code, related to country, where ${COUNTRYNAME} is a case insencitive country name, for example JAMAICA. Return HTTP 200 code in case of success. Return HTTP 404 code in case, when country has not been found.
+5. Implement unit test for /code/${COUNTRYNAME} (GET)
+6. Implement error logging and request logging for implemented RESTful services
+7. Make Dockerfile for application build and deploy.
