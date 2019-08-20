@@ -1,4 +1,5 @@
 go get github.com/lib/pq
+
 go run *.go OR go build -o server .
 
 Требуется реализовать микросервис согласно требованиям:
