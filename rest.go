@@ -12,7 +12,7 @@ import (
 func getCodeByName(w http.ResponseWriter, req *http.Request) {
   country := req.URL.Path[len("/code/"):]
   country = strings.ToLower(country)
-  fmt.Println(req.Method, time.Now(), req.RemoteAddr)
+  fmt.Println(req.Method, req.URL, time.Now(), req.RemoteAddr)
   if req.Method != "GET" {
     fmt.Fprintf(w, "Invalid request method. Terminating...")
     return
@@ -44,18 +44,22 @@ func getCodeByName(w http.ResponseWriter, req *http.Request) {
     fmt.Println(r.c, r.n)
   }
 
+  var responseLog string
+
   if r.c == "" {
+    fmt.Println("Country not found...")
+    responseLog = "Country not found..."
     w.WriteHeader(404)
     fmt.Fprintf(w, "Country not found...")
-    fmt.Println("Country not found...")
-    return
+  } else {
+    responseLog = string(r.c) + " " + string(r.n)
   }
 
   w.WriteHeader(200)
   fmt.Fprintf(w, "hello blya, %v, %v", r.c, r.n)
 
   var logStr string
-  logStr = req.Method + " from " + req.RemoteAddr + " on " + string(req.URL.Path) + " at " + time.Now().Format("2006-01-02 15:04:05")
+  logStr = req.Method + " from " + req.RemoteAddr + " on " + string(req.URL.Path) + " at " + time.Now().Format("2006-01-02 15:04:05") + " Response: " + responseLog
   file, err := os.OpenFile("mainlog.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
   if err != nil {
     fmt.Println("Error opening file...")
