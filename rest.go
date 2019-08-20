@@ -7,6 +7,7 @@ import (
   "strings"
   "time"
   "os"
+  "encoding/json"
 )
 
 func getCodeByName(w http.ResponseWriter, req *http.Request) {
@@ -17,6 +18,8 @@ func getCodeByName(w http.ResponseWriter, req *http.Request) {
     fmt.Fprintf(w, "Invalid request method. Terminating...")
     return
   }
+
+  w.Header().Set("Access-Control-Allow-Origin", "*")
 
   connStr := "user=karl dbname=karl host=localhost sslmode=disable"
   db, err := sql.Open("postgres", connStr)
@@ -45,18 +48,31 @@ func getCodeByName(w http.ResponseWriter, req *http.Request) {
   }
 
   var responseLog string
+  type jsonResp struct {
+    Country string
+    Code    string
+  }
 
   if r.c == "" {
     fmt.Println("Country not found...")
     responseLog = "Country not found..."
+    rsp := jsonResp {
+      Country: "Country not found...",
+      Code: "",
+    }
+    jsonToSend, _ := json.Marshal(rsp)
     w.WriteHeader(404)
-    fmt.Fprintf(w, "Country not found...")
+    w.Write(jsonToSend)
   } else {
     responseLog = string(r.c) + " " + string(r.n)
+    rsp := jsonResp {
+      Country: r.c,
+      Code: r.n,
+    }
+    jsonToSend, _ := json.Marshal(rsp)
+    w.WriteHeader(200)
+    w.Write(jsonToSend)
   }
-
-  w.WriteHeader(200)
-  fmt.Fprintf(w, "hello blya, %v, %v", r.c, r.n)
 
   var logStr string
   logStr = req.Method + " from " + req.RemoteAddr + " on " + string(req.URL.Path) + " at " + time.Now().Format("2006-01-02 15:04:05") + " Response: " + responseLog
