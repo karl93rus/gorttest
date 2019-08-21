@@ -35,7 +35,7 @@ func getCodes(connStr string) error {
       fmt.Println(err)
       return err
     }
-    fmt.Println(k, v)
+    // fmt.Println(k, v)
   }
 
   fmt.Println("Codes updated\n")

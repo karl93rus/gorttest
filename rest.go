@@ -6,15 +6,15 @@ import (
   "database/sql"
   "strings"
   "time"
-  "os"
   "encoding/json"
 )
 
 func getCodeByName(w http.ResponseWriter, req *http.Request) {
   country := req.URL.Path[len("/code/"):]
   country = strings.ToLower(country)
-  fmt.Println(req.Method, req.URL, time.Now(), req.RemoteAddr)
+  fmt.Println(req.Method, req.URL, time.Now(), req.RemoteAddr, req.Header["User-Agent"])
   if req.Method != "GET" {
+    fmt.Println("Ivalid request methid...")
     fmt.Fprintf(w, "Invalid request method. Terminating...")
     return
   }
@@ -76,10 +76,5 @@ func getCodeByName(w http.ResponseWriter, req *http.Request) {
 
   var logStr string
   logStr = req.Method + " from " + req.RemoteAddr + " on " + string(req.URL.Path) + " at " + time.Now().Format("2006-01-02 15:04:05") + " Response: " + responseLog
-  file, err := os.OpenFile("mainlog.log", os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-  if err != nil {
-    fmt.Println("Error opening file...")
-  }
-  defer file.Close()
-  file.Write([]byte(logStr + "\n"))
+  writeLog(logStr)
 }
