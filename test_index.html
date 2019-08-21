@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <title>Test GO http server</title>
+    <script>
+      window.onload = function() {
+        let resp = {};
+        let btn = document.getElementById('req');
+        btn.addEventListener('click', async () => {
+          let country = document.getElementById('reqc').value;
+          try {
+            let res = await axios.get("http://localhost:5555/code/" + country);
+            resp.Country = res.data.Country;
+            resp.Code = res.data.Code;
+            document.getElementById('country').textContent = resp.Country;
+            document.getElementById('code').textContent = resp.Code;
+          } catch (err) {
+            if(err.response.status === 404) {
+              resp.Country = err.response.data.Country;
+              resp.Code = err.response.data.Code;
+              document.getElementById('country').textContent = resp.Country;
+              document.getElementById('code').textContent = resp.Code;
+            }
+          }
+        });
+      }
+    </script>
+  </head>
+  <body>
+    <input id="reqc" type="text" placeholder="Country">
+    <button id="req">Make request</button>
+    <p id="country"></p>
+    <p id="code"></p>
+  </body>
+</html>
